@@ -1,5 +1,5 @@
 {
-  "name": "boilerplate",
+  "name": "theory-drills",
   "version": "1.0.0",
   "description": "React/Webpack boilerplate",
   "main": "server.js",
@@ -34,6 +34,15 @@
   },
   "dependencies": {
     "react": "^15.3.2",
-    "react-router": "^3.0.0"
-  }
+    "react-router": "^3.0.0",
+    "text-to-speech-js": "^1.1.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gpascale/boilerplate.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gpascale/boilerplate/issues"
+  },
+  "homepage": "https://github.com/gpascale/boilerplate#readme"
 }
