@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import Checkbox from 'material-ui/checkbox';
+import Checkbox from 'material-ui/Checkbox';
 import _ from 'underscore';
 
 import { Constants, DegreeQuestions } from 'music-theory-quiz';
