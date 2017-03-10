@@ -1,8 +1,20 @@
 .quiz {
-  width: 500px;
-  height: 400px;
+  width: 1000px;
+  max-width: 80%;
   margin: 0 auto;
   text-align: center;
   padding-top: 50px;
   margin-top: 50px;
+}
+
+.keySelectors {
+  margin-bottom: 50px;
+}
+
+.degreeOptionList {
+	list-style-type: none;
+}
+
+.degreeOption {
+	display: inline-block;
 }

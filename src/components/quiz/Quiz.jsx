@@ -1,21 +1,74 @@
 import React, { Component, PropTypes } from 'react';
+import Checkbox from 'material-ui/checkbox';
+import _ from 'underscore';
 
-import { DegreeQuestions } from 'music-theory-quiz';
+import { Constants, DegreeQuestions } from 'music-theory-quiz';
 import SpeechUtils from '../../js/speechUtils';
+
+console.dir(Constants);
+
+const checkboxStyle = {
+  maxWidth: 80,
+  display: 'inline-block'
+};
 
 class Quiz extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      playing: false
+      playing: false,
+      keys: new Set(Constants.Keys),
+      degrees: new Set(Constants.Degrees.map(degree => degree.name))
     }
+    this.degreeQuestions = new DegreeQuestions({ keys: this.state.keys,
+                                                 degrees: this.state.degrees });
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    this.degreeQuestions.setDegrees(nextState.degrees);
+    this.degreeQuestions.setKeys(nextState.keys);
   }
 
   render() {
     var self = this;
+    console.dir(this.state);
     return (
       <div className="quiz">
+        <div className="keySelectors">
+          <p>Keys</p>
+          <ul>
+            {Constants.Keys.map((key, i) => {
+              return (<Checkbox key={i} label={key} style={checkboxStyle}
+                                checked={self.state.keys.has(key)}
+                                onCheck={(e, isChecked) => {
+                                  var newKeys = new Set(self.state.keys);
+                                  if (isChecked)
+                                    newKeys.add(key);
+                                  else
+                                    newKeys.delete(key);
+                                  self.setState({ keys: newKeys });
+                                }} />);
+            })}
+          </ul>
+        </div>
+        <div className="degreeSelectors">
+          <p>Degrees</p>
+          <ul>
+            {Constants.Degrees.map((degree, i) => {
+              return (<Checkbox key={i} label={degree.name} style={checkboxStyle}
+                                checked={self.state.degrees.has(degree.name)}
+                                onCheck={(e, isChecked) => {
+                                  var newDegrees = new Set(self.state.degrees);
+                                  if (isChecked)
+                                    newDegrees.add(degree.name);
+                                  else
+                                    newDegrees.delete(degree.name);
+                                  self.setState({ degrees: newDegrees });
+                                }} />);
+            })}
+          </ul>
+        </div>
         <button className="startStopButton"
                 onClick={() => (self.state.playing ? self.stop : self.play).apply(self)}>
           {this.state.playing ? 'Stop' : 'Start'}
@@ -31,10 +84,8 @@ class Quiz extends Component {
   }
 
   play() {
-    console.log('start');
-    var dq = new DegreeQuestions();
     var playing = setInterval(() => {
-      var q = dq.generate();
+      var q = this.degreeQuestions.generate();
       var answer = q.answer.name().toUpperCase() + q.answer.accidental();
       
       // Ask the question
