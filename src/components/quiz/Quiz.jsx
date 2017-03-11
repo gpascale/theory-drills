@@ -39,14 +39,14 @@ class Quiz extends Component {
       <div className="quiz">
         <div className="quizOptions">
           <div className="keySelectors">
-            <p>Keys</p>
+            <p className="selectorTitle">Keys</p>
             <CheckboxGroup items={Constants.Keys}
                            onChange={(checkedSet) => {
                              self.setState({ keys: checkedSet })
                            }} />
           </div>
           <div className="degreeSelectors">
-            <p>Degrees</p>
+            <p className="selectorTitle">Degrees</p>
             <CheckboxGroup items={Constants.Degrees.map(degree => degree.name)}
                            onChange={(checkedSet) => {
                              self.setState({ degrees: checkedSet })
@@ -55,7 +55,7 @@ class Quiz extends Component {
         </div>
         <RaisedButton label={this.state.playing ? 'STOP' : 'START'}
                       style={{ }}
-                      labelColor={'white'}
+                      labelColor={'#ffffff'}
                       backgroundColor={(this.state.playing ? 'red' : '#1AD11A')}
                       onClick={() => (self.state.playing ? self.stop : self.play).apply(self)}/>
         <p className="question">

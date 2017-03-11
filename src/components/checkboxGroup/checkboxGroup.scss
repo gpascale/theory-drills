@@ -1,11 +1,19 @@
 
 .checkboxGroup {
+  display: inline-block;
   text-align: left;
   a {
-    padding: 0 10px;
     text-decoration: none;
     &:visited {
       text-decoration: none;
     }
+  }
+
+  ul {
+    padding-left: 0;
+  }
+
+  .separator {
+    padding: 0 10px;
   }
 }

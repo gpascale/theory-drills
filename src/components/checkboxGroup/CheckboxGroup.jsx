@@ -24,7 +24,7 @@ class CheckboxGroup extends Component {
     return (
       <div className="checkboxGroup">
         <a href="" onClick={checkOrUncheckAllHandler(true)}>Check All</a>
-        |
+        <span className="separator">|</span>
         <a href="" onClick={checkOrUncheckAllHandler(false)}>Uncheck All</a>
         <ul>
           {this.props.items.map((item, i) => {
