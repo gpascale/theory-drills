@@ -7,6 +7,10 @@
   margin-top: 50px;
 }
 
+.quizOptions {
+  margin-bottom: 100px;
+}
+
 .keySelectors {
   margin-bottom: 50px;
 }
@@ -17,4 +21,8 @@
 
 .degreeOption {
 	display: inline-block;
+}
+
+.question, .answer {
+  font-size: 48px;
 }

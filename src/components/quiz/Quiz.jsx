@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import Checkbox from 'material-ui/Checkbox';
+import RaisedButton from 'material-ui/RaisedButton';
 import _ from 'underscore';
 
 import { Constants, DegreeQuestions } from 'music-theory-quiz';
@@ -36,24 +37,27 @@ class Quiz extends Component {
     var self = this;
     return (
       <div className="quiz">
-        <div className="keySelectors">
-          <p>Keys</p>
-          <CheckboxGroup items={Constants.Keys}
-                         onChange={(checkedSet) => {
-                           self.setState({ keys: checkedSet })
-                         }} />
+        <div className="quizOptions">
+          <div className="keySelectors">
+            <p>Keys</p>
+            <CheckboxGroup items={Constants.Keys}
+                           onChange={(checkedSet) => {
+                             self.setState({ keys: checkedSet })
+                           }} />
+          </div>
+          <div className="degreeSelectors">
+            <p>Degrees</p>
+            <CheckboxGroup items={Constants.Degrees.map(degree => degree.name)}
+                           onChange={(checkedSet) => {
+                             self.setState({ degrees: checkedSet })
+                           }} />
+          </div>
         </div>
-        <div className="degreeSelectors">
-          <p>Degrees</p>
-          <CheckboxGroup items={Constants.Degrees.map(degree => degree.name)}
-                         onChange={(checkedSet) => {
-                           self.setState({ degrees: checkedSet })
-                         }} />
-        </div>
-        <button className="startStopButton"
-                onClick={() => (self.state.playing ? self.stop : self.play).apply(self)}>
-          {this.state.playing ? 'Stop' : 'Start'}
-        </button>
+        <RaisedButton label={this.state.playing ? 'STOP' : 'START'}
+                      style={{ }}
+                      labelColor={'white'}
+                      backgroundColor={(this.state.playing ? 'red' : '#1AD11A')}
+                      onClick={() => (self.state.playing ? self.stop : self.play).apply(self)}/>
         <p className="question">
           {this.state.question}
         </p>
