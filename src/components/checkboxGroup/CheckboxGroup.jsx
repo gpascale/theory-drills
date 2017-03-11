@@ -46,7 +46,10 @@ class CheckboxGroup extends Component {
 
     function checkOrUncheckAllHandler(checkTrueOrUncheckFalse) {
       return function(e) {
-        var checked = _.object(Object.entries(self.state.checked).map((entry) => [entry[0], checkTrueOrUncheckFalse]));
+        // This only works in chrome
+        // var checked = _.object(Object.entries(self.state.checked).map((entry) => [entry[0], checkTrueOrUncheckFalse]));
+        var checked = _.object(_.map(self.state.checked, (val, key) => [key, checkTrueOrUncheckFalse]));
+        console.dir(checked);
         self.setState({ checked: checked }, () => {
           self.props.onChange(self.getCheckedSet());
         });

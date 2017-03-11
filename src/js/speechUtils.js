@@ -33,9 +33,16 @@ const SpeechUtils = {
 
 function _fixLetter(pitch) {
   pitch = pitch.toUpperCase();
-  if (pitch == 'A')
-    return 'Eh';
-  return pitch;
+  var pitchFixes = {
+    'A': 'Eh',
+    'B': 'Bee',
+    'C': 'See',
+    'D': 'Dee',
+    'E': 'E',
+    'F': 'Eff',
+    'G': 'Gee'
+  };
+  return pitchFixes[pitch] || pitch;
 }
 
 function _fixAccidental(accidental) {

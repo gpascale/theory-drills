@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 
-import Quiz from '../components/quiz/Quiz';
+import QuizPage from '../components/quizpage/QuizPage';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
@@ -20,7 +20,7 @@ const muiTheme = getMuiTheme({
 ReactDOM.render(
   <MuiThemeProvider muiTheme={muiTheme}>
     <Router onUpdate={() => window.scrollTo(0, 0)} history={browserHistory}>
-      <Route path="/" component={Quiz}>
+      <Route path="/" component={QuizPage}>
       </Route>
     </Router>
   </MuiThemeProvider>

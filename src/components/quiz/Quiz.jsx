@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
 import _ from 'underscore';
+const Chance = require('chance');
+const chance = new Chance();
 
 import { Constants, DegreeQuestions } from 'music-theory-quiz';
 import SpeechUtils from '../../js/speechUtils';
@@ -94,7 +96,7 @@ class Quiz extends Component {
         });
         setTimeout(() => {
           // Tell the answer
-          speak('It is ' + answer);
+          speak(chance.pickone(['It is', 'It\'s', '']) + ' ' + answer);
           self.setState({
             answer: answer
           });
@@ -113,7 +115,9 @@ class Quiz extends Component {
   stop() {
     clearInterval(this.state.playing);
     this.setState({
-      playing: false
+      playing: false,
+      question: null,
+      answer: null
     });
   }
 }
