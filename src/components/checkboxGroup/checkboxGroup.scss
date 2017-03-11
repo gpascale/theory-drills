@@ -1,0 +1,11 @@
+
+.checkboxGroup {
+  text-align: left;
+  a {
+    padding: 0 10px;
+    text-decoration: none;
+    &:visited {
+      text-decoration: none;
+    }
+  }
+}

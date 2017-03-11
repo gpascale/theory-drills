@@ -34,7 +34,7 @@ const SpeechUtils = {
 function _fixLetter(pitch) {
   pitch = pitch.toUpperCase();
   if (pitch == 'A')
-    return 'Ay';
+    return 'Eh';
   return pitch;
 }
 

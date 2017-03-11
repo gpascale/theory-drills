@@ -4,8 +4,7 @@ import _ from 'underscore';
 
 import { Constants, DegreeQuestions } from 'music-theory-quiz';
 import SpeechUtils from '../../js/speechUtils';
-
-console.dir(Constants);
+import CheckboxGroup from '../checkboxGroup/CheckboxGroup';
 
 const checkboxStyle = {
   maxWidth: 80,
@@ -14,60 +13,42 @@ const checkboxStyle = {
 
 class Quiz extends Component {
 
+  // --------------------------------------------------------------------------
   constructor(props) {
     super(props);
     this.state = {
       playing: false,
-      keys: new Set(Constants.Keys),
-      degrees: new Set(Constants.Degrees.map(degree => degree.name))
+      keys: Constants.Keys,
+      degrees: Constants.Degrees.map(degree => degree.name)
     }
     this.degreeQuestions = new DegreeQuestions({ keys: this.state.keys,
                                                  degrees: this.state.degrees });
   }
 
+  // --------------------------------------------------------------------------
   componentWillUpdate(nextProps, nextState) {
     this.degreeQuestions.setDegrees(nextState.degrees);
     this.degreeQuestions.setKeys(nextState.keys);
   }
 
+  // --------------------------------------------------------------------------
   render() {
     var self = this;
-    console.dir(this.state);
     return (
       <div className="quiz">
         <div className="keySelectors">
           <p>Keys</p>
-          <ul>
-            {Constants.Keys.map((key, i) => {
-              return (<Checkbox key={i} label={key} style={checkboxStyle}
-                                checked={self.state.keys.has(key)}
-                                onCheck={(e, isChecked) => {
-                                  var newKeys = new Set(self.state.keys);
-                                  if (isChecked)
-                                    newKeys.add(key);
-                                  else
-                                    newKeys.delete(key);
-                                  self.setState({ keys: newKeys });
-                                }} />);
-            })}
-          </ul>
+          <CheckboxGroup items={Constants.Keys}
+                         onChange={(checkedSet) => {
+                           self.setState({ keys: checkedSet })
+                         }} />
         </div>
         <div className="degreeSelectors">
           <p>Degrees</p>
-          <ul>
-            {Constants.Degrees.map((degree, i) => {
-              return (<Checkbox key={i} label={degree.name} style={checkboxStyle}
-                                checked={self.state.degrees.has(degree.name)}
-                                onCheck={(e, isChecked) => {
-                                  var newDegrees = new Set(self.state.degrees);
-                                  if (isChecked)
-                                    newDegrees.add(degree.name);
-                                  else
-                                    newDegrees.delete(degree.name);
-                                  self.setState({ degrees: newDegrees });
-                                }} />);
-            })}
-          </ul>
+          <CheckboxGroup items={Constants.Degrees.map(degree => degree.name)}
+                         onChange={(checkedSet) => {
+                           self.setState({ degrees: checkedSet })
+                         }} />
         </div>
         <button className="startStopButton"
                 onClick={() => (self.state.playing ? self.stop : self.play).apply(self)}>
@@ -83,48 +64,68 @@ class Quiz extends Component {
     );
   }
 
+  // --------------------------------------------------------------------------
+  // Start the question asking loop
+  // --------------------------------------------------------------------------
   play() {
-    var playing = setInterval(() => {
-      var q = this.degreeQuestions.generate();
-      var answer = q.answer.name().toUpperCase() + q.answer.accidental();
-      
-      // Ask the question
-      speak(q.questionText);
-      this.setState({
-        question: q.questionText,
-        answer: null
-      })
+    var self = this;
 
-      setTimeout(() => {
-        // Tell the answer
-        speak('It is ' + answer);
-        this.setState({
-          answer: answer
+    // This is necessary to trick iOS into letting us use the Speech Synthesis API
+    // It seems the initial speech call must be made in response to a user action (e.g. button press)
+    speak('');
+
+    var playing = setInterval(askOne, this.props.questionTime + this.props.answerTime);
+    this.setState({ playing: playing });
+    askOne();
+
+    function askOne(callback) {
+      try {
+        var q = self.degreeQuestions.generate();
+        var answer = q.answer.name().toUpperCase() + q.answer.accidental();
+        // Ask the question
+        speak(q.questionText);
+        self.setState({
+          question: q.questionText,
+          answer: null
         });
-      }, 3000);
-    }, 5000);
-    this.setState({
-      playing: playing
-    });
+        setTimeout(() => {
+          // Tell the answer
+          speak('It is ' + answer);
+          self.setState({
+            answer: answer
+          });
+        }, self.props.questionTime);
+      }
+      catch(e) {
+        alert(e);
+        self.stop();
+      }
+    }
   }
 
+  // --------------------------------------------------------------------------
+  // Stop the question asking loop
+  // --------------------------------------------------------------------------
   stop() {
-    console.log('stop');
     clearInterval(this.state.playing);
     this.setState({
       playing: false
     });
   }
-
-  
 }
 
 Quiz.propTypes = {
+  questionTime: PropTypes.number,
+  answerTime: PropTypes.number,
   className: PropTypes.string,
   playing: PropTypes.bool,
-  question: PropTypes.string,
-  answer: PropTypes.string
 };
+
+Quiz.defaultProps = {
+  questionTime: 4000,
+  answerTime: 2000,
+  playing: false
+}
 
 function speak(text) {
   var preparedText = SpeechUtils.prepareForTextToSpeech(text);
