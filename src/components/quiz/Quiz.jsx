@@ -8,6 +8,7 @@ const chance = new Chance();
 import { Constants, DegreeQuestions } from 'music-theory-quiz';
 import SpeechUtils from '../../js/speechUtils';
 import CheckboxGroup from '../checkboxGroup/CheckboxGroup';
+import DelaySelector from '../delayselector/DelaySelector';
 
 const checkboxStyle = {
   maxWidth: 80,
@@ -22,7 +23,9 @@ class Quiz extends Component {
     this.state = {
       playing: false,
       keys: Constants.Keys,
-      degrees: Constants.Degrees.map(degree => degree.name)
+      degrees: Constants.Degrees.map(degree => degree.name),
+      questionDelay: 4000,
+      answerDelay: 2000,
     }
     this.degreeQuestions = new DegreeQuestions({ keys: this.state.keys,
                                                  degrees: this.state.degrees });
@@ -54,6 +57,14 @@ class Quiz extends Component {
                              self.setState({ degrees: checkedSet })
                            }} />
           </div>
+          <div className="delaySelectors">
+            <DelaySelector title="Question Delay" className="questionDelaySelector"
+                           minDelay={0.5} maxDelay={10.0} defaultDelay={4.0}
+                           onChange={(newDelay) => self.setState({questionDelay: 1000 * newDelay})} />
+            <DelaySelector title="Answer Delay" className="answerDelaySelector"
+                           minDelay={0.5} maxDelay={10.0} defaultDelay={2.0}
+                           onChange={(newDelay) => self.setState({answerDelay: 1000 * newDelay})} />
+          </div>
         </div>
         <RaisedButton label={this.state.playing ? 'STOP' : 'START'}
                       style={{ }}
@@ -80,7 +91,7 @@ class Quiz extends Component {
     // It seems the initial speech call must be made in response to a user action (e.g. button press)
     speak('');
 
-    var playing = setInterval(askOne, this.props.questionTime + this.props.answerTime);
+    var playing = setInterval(askOne, this.state.questionDelay + this.state.answerDelay);
     this.setState({ playing: playing });
     askOne();
 
@@ -100,7 +111,7 @@ class Quiz extends Component {
           self.setState({
             answer: answer
           });
-        }, self.props.questionTime);
+        }, self.state.questionDelay);
       }
       catch(e) {
         alert(e);
@@ -130,8 +141,6 @@ Quiz.propTypes = {
 };
 
 Quiz.defaultProps = {
-  questionTime: 4000,
-  answerTime: 2000,
   playing: false
 }
 

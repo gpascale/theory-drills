@@ -38,7 +38,7 @@ function _fixLetter(pitch) {
     'B': 'Bee',
     'C': 'See',
     'D': 'Dee',
-    'E': 'E',
+    'E': 'ee',
     'F': 'Eff',
     'G': 'Gee'
   };

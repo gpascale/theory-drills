@@ -1,0 +1,17 @@
+
+.delaySelector {
+  text-align: left;
+  display: inline-block;
+  width: 400px;
+
+  span {
+    margin-left: 15px;
+    position: relative;
+    top: -3px;
+  }
+}
+
+.delaySelectorTitle {
+  font-size: 24px;
+  margin: 0px;
+}
