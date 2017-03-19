@@ -1,10 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
 
 import QuizPage from '../components/quizPage/QuizPage';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
+import reducers from '../redux/reducers';
+const createStoreWithMiddleware = applyMiddleware()(createStore);
+const store = createStoreWithMiddleware(reducers);
 
 require('../scss/bundle.scss');
 
@@ -18,10 +24,12 @@ const muiTheme = getMuiTheme({
 });
 
 ReactDOM.render(
-  <MuiThemeProvider muiTheme={muiTheme}>
-    <Router onUpdate={() => window.scrollTo(0, 0)} history={browserHistory}>
-      <Route path="/" component={QuizPage}>
-      </Route>
-    </Router>
-  </MuiThemeProvider>
+  <Provider store={store}>
+    <MuiThemeProvider muiTheme={muiTheme}>
+      <Router onUpdate={() => window.scrollTo(0, 0)} history={browserHistory}>
+        <Route path="/" component={QuizPage}>
+        </Route>
+      </Router>
+    </MuiThemeProvider>
+  </Provider>
   , document.getElementById('react-root'));

@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import AppBar from 'material-ui/AppBar';
+import Header from '../header/Header';
 
 class PageLayout extends Component {
   render() {
     return (
       <div className="container">
-        <AppBar title="Theory Drills"/>
+        <Header />
         <div className="content">
           {this.props.children}
         </div>
