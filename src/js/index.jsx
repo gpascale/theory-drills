@@ -27,7 +27,10 @@ ReactDOM.render(
   <Provider store={store}>
     <MuiThemeProvider muiTheme={muiTheme}>
       <Router onUpdate={() => window.scrollTo(0, 0)} history={browserHistory}>
-        <Route path="/" component={QuizPage}>
+        <Route path="/">
+          <IndexRoute component={() => (<QuizPage type="Chords"/>)}/>
+          <Route path="/chords" component={() => (<QuizPage type="Chords"/>)} />
+          <Route path="/degrees" component={() => (<QuizPage type="Degrees"/>)} />
         </Route>
       </Router>
     </MuiThemeProvider>

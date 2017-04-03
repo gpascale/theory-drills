@@ -7,13 +7,7 @@ const chance = new Chance();
 
 import { Constants, DegreeQuestions } from 'music-theory-quiz';
 import SpeechUtils from '../../js/speechUtils';
-import CheckboxGroup from '../checkboxGroup/CheckboxGroup';
-import DelaySelector from '../delayselector/DelaySelector';
 
-const checkboxStyle = {
-  maxWidth: 80,
-  display: 'inline-block'
-};
 
 class Quiz extends Component {
 
@@ -22,50 +16,19 @@ class Quiz extends Component {
     super(props);
     this.state = {
       playing: false,
-      keys: Constants.Keys,
-      degrees: Constants.Degrees.map(degree => degree.name),
       questionDelay: 4000,
       answerDelay: 2000,
     }
-    this.degreeQuestions = new DegreeQuestions({ keys: this.state.keys,
-                                                 degrees: this.state.degrees });
   }
 
-  // --------------------------------------------------------------------------
-  componentWillUpdate(nextProps, nextState) {
-    this.degreeQuestions.setDegrees(nextState.degrees);
-    this.degreeQuestions.setKeys(nextState.keys);
-  }
+  
 
   // --------------------------------------------------------------------------
   render() {
     var self = this;
     return (
       <div className="quiz">
-        <div className="quizOptions">
-          <div className="keySelectors">
-            <p className="selectorTitle">Keys</p>
-            <CheckboxGroup items={Constants.Keys}
-                           onChange={(checkedSet) => {
-                             self.setState({ keys: checkedSet })
-                           }} />
-          </div>
-          <div className="degreeSelectors">
-            <p className="selectorTitle">Degrees</p>
-            <CheckboxGroup items={Constants.Degrees.map(degree => degree.name)}
-                           onChange={(checkedSet) => {
-                             self.setState({ degrees: checkedSet })
-                           }} />
-          </div>
-          <div className="delaySelectors">
-            <DelaySelector title="Question Delay" className="questionDelaySelector"
-                           minDelay={0.5} maxDelay={10.0} defaultDelay={4.0}
-                           onChange={(newDelay) => self.setState({questionDelay: 1000 * newDelay})} />
-            <DelaySelector title="Answer Delay" className="answerDelaySelector"
-                           minDelay={0.5} maxDelay={10.0} defaultDelay={2.0}
-                           onChange={(newDelay) => self.setState({answerDelay: 1000 * newDelay})} />
-          </div>
-        </div>
+        {this.props.options}
         <RaisedButton label={this.state.playing ? 'STOP' : 'START'}
                       style={{ }}
                       labelColor={'#ffffff'}
@@ -91,14 +54,9 @@ class Quiz extends Component {
     // It seems the initial speech call must be made in response to a user action (e.g. button press)
     speak('');
 
-    var playing = setInterval(askOne, this.state.questionDelay + this.state.answerDelay);
-    this.setState({ playing: playing });
-    askOne();
-
-    function askOne(callback) {
+    function loop() {
       try {
-        var q = self.degreeQuestions.generate();
-        var answer = q.answer.name().toUpperCase() + q.answer.accidental();
+        var q = self.props.generateQuestion();
         // Ask the question
         speak(q.questionText);
         self.setState({
@@ -107,9 +65,9 @@ class Quiz extends Component {
         });
         setTimeout(() => {
           // Tell the answer
-          speak(chance.pickone(['It is', 'It\'s', '']) + ' ' + answer);
+          speak(chance.pickone(['It is', 'It\'s', '']) + ' ' + q.answer);
           self.setState({
-            answer: answer
+            answer: q.answer
           });
         }, self.state.questionDelay);
       }
@@ -118,6 +76,12 @@ class Quiz extends Component {
         self.stop();
       }
     }
+
+    loop();
+    var playing = setInterval(loop, this.state.questionDelay + this.state.answerDelay);
+
+    this.setState({ playing: playing });
+    
   }
 
   // --------------------------------------------------------------------------
@@ -136,6 +100,8 @@ class Quiz extends Component {
 Quiz.propTypes = {
   questionTime: PropTypes.number,
   answerTime: PropTypes.number,
+  generateQuestion: PropTypes.func,
+  options: PropTypes.element,
   className: PropTypes.string,
   playing: PropTypes.bool,
 };

@@ -1,0 +1,16 @@
+.sidebar {
+  position: fixed;
+  height: 100%;
+  width: 150px;
+
+  .sidebarContent {
+    margin-top: 20px;
+    line-height: 32px;
+    .sidebarCategory {
+      margin-left: 10px;
+    }
+    div {
+      margin-left: 20px;
+    }
+  }
+}
