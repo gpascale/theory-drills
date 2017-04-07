@@ -21,14 +21,23 @@ class Quiz extends Component {
     }
   }
 
-  
+  componentWillReceiveProps(nextProps) {
+    // TODO: Abstract this pattern?
+    var newState = { };
+    ['questionDelay', 'answerDelay'].forEach((key) => {
+      if (nextProps[key] && this.state[key] != nextProps[key])
+        newState[key] = nextProps[key];
+    });
+    if (Object.keys(newState).length > 0)
+      this.setState(newState);
+  }
 
   // --------------------------------------------------------------------------
   render() {
     var self = this;
     return (
       <div className="quiz">
-        {this.props.options}
+        {this.props.optionsComponent}
         <RaisedButton label={this.state.playing ? 'STOP' : 'START'}
                       style={{ }}
                       labelColor={'#ffffff'}
@@ -101,7 +110,7 @@ Quiz.propTypes = {
   questionTime: PropTypes.number,
   answerTime: PropTypes.number,
   generateQuestion: PropTypes.func,
-  options: PropTypes.element,
+  optionsComponent: PropTypes.element,
   className: PropTypes.string,
   playing: PropTypes.bool,
 };

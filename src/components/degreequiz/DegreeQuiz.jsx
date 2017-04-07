@@ -20,7 +20,7 @@ class DegreeQuiz extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      keys: Constants.Keys,
+      keys: Constants.MajorKeys,
       degrees: Constants.Degrees.map(degree => degree.name),
     };
     this.degreeQuestions = new DegreeQuestions({ keys: this.state.keys,
@@ -33,12 +33,14 @@ class DegreeQuiz extends Component {
     this.degreeQuestions.setKeys(nextState.keys);
   }
 
+  // --------------------------------------------------------------------------
   render() {
-    var options = (
+    var self = this;
+    var optionsComponent = (
       <div className="quizOptions">
         <div className="keySelectors">
           <p className="selectorTitle">Keys</p>
-          <CheckboxGroup items={Constants.Keys}
+          <CheckboxGroup items={Constants.MajorKeys}
                          onChange={(checkedSet) => {
                            self.setState({ keys: checkedSet })
                          }} />
@@ -62,7 +64,10 @@ class DegreeQuiz extends Component {
     );
     return (
       <div className="degreeQuiz">
-        <Quiz options={options} generateQuestion={() => this.degreeQuestions.generate()}/>
+        <Quiz optionsComponent={optionsComponent} 
+              generateQuestion={() => this.degreeQuestions.generate()}
+              questionDelay={this.state.questionDelay}
+              answerDelay={this.state.answerDelay} />
       </div>
     );
   }

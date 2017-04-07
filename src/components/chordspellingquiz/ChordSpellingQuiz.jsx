@@ -20,10 +20,13 @@ class ChordSpellingQuiz extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      keys: Constants.Keys,
+      keys: Constants.MajorKeys,
       degrees: Constants.Degrees.map(degree => degree.name),
+      questionDelay: 4000,
+      answerDelay: 3000
     };
-    this.chordQuestions = new ChordQuestions({ keys: this.state.keys, degrees: this.state.degrees });
+    this.chordQuestions = new ChordQuestions({ keys: this.state.keys,
+                                               strategy: "diatonic" });
   }
 
   // --------------------------------------------------------------------------
@@ -31,10 +34,34 @@ class ChordSpellingQuiz extends Component {
     this.chordQuestions.setKeys(nextState.keys);
   }
 
+  // --------------------------------------------------------------------------
   render() {
+    var self = this;
+    var optionsComponent = (
+      <div className="quizOptions">
+        <div className="chordTypeSelectors">
+         <p className="selectorTitle">Chord Types</p>
+          <CheckboxGroup items={Constants.MajorKeys}
+                         onChange={(checkedSet) => {
+                           self.setState({ keys: checkedSet })
+                         }} />
+        </div>
+        <div className="delaySelectors">
+          <DelaySelector title="Question Delay" className="questionDelaySelector"
+                         minDelay={0.5} maxDelay={10.0} defaultDelay={4.0}
+                         onChange={(newDelay) => self.setState({questionDelay: 1000 * newDelay})} />
+          <DelaySelector title="Answer Delay" className="answerDelaySelector"
+                         minDelay={0.5} maxDelay={10.0} defaultDelay={2.0}
+                         onChange={(newDelay) => self.setState({answerDelay: 1000 * newDelay})} />
+        </div>
+      </div>
+    );
     return (
       <div className="degreeQuiz">
-        <Quiz options={null} generateQuestion={() => this.chordQuestions.generate()}/>
+        <Quiz optionsComponent={optionsComponent}
+              generateQuestion={() => this.chordQuestions.generate()}
+              questionDelay={this.state.questionDelay}
+              answerDelay={this.state.answerDelay} />
       </div>
     );
   }
