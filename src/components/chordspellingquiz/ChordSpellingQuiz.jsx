@@ -6,7 +6,7 @@ const Chance = require('chance');
 const chance = new Chance();
 
 import Quiz from '../quiz/Quiz';
-import { Constants, ChordQuestions } from 'music-theory-quiz';
+import { Constants, ChordQuestions } from 'music-theory-questions';
 import SpeechUtils from '../../js/speechUtils';
 import CheckboxGroup from '../checkboxGroup/CheckboxGroup';
 import DelaySelector from '../delayselector/DelaySelector';

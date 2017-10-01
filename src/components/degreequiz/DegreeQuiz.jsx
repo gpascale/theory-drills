@@ -6,7 +6,7 @@ const Chance = require('chance');
 const chance = new Chance();
 
 import Quiz from '../quiz/Quiz';
-import { Constants, DegreeQuestions } from 'music-theory-quiz';
+import { Constants, DegreeQuestions } from 'music-theory-questions';
 import SpeechUtils from '../../js/speechUtils';
 import CheckboxGroup from '../checkboxGroup/CheckboxGroup';
 import DelaySelector from '../delayselector/DelaySelector';
@@ -64,7 +64,7 @@ class DegreeQuiz extends Component {
     );
     return (
       <div className="degreeQuiz">
-        <Quiz optionsComponent={optionsComponent} 
+        <Quiz optionsComponent={optionsComponent}
               generateQuestion={() => this.degreeQuestions.generate()}
               questionDelay={this.state.questionDelay}
               answerDelay={this.state.answerDelay} />

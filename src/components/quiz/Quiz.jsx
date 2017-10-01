@@ -5,7 +5,7 @@ import _ from 'underscore';
 const Chance = require('chance');
 const chance = new Chance();
 
-import { Constants, DegreeQuestions } from 'music-theory-quiz';
+import { Constants, DegreeQuestions } from 'music-theory-questions';
 import SpeechUtils from '../../js/speechUtils';
 
 
@@ -90,7 +90,7 @@ class Quiz extends Component {
     var playing = setInterval(loop, this.state.questionDelay + this.state.answerDelay);
 
     this.setState({ playing: playing });
-    
+
   }
 
   // --------------------------------------------------------------------------
